@@ -6,7 +6,7 @@ import java.util.stream.Stream;
 
 public class StreamsMedium {
     public static void main(String[] args) {
-        question3();
+        question5();
     }
 
     /*Q1
@@ -103,10 +103,54 @@ public class StreamsMedium {
     public static void question4(){
         List<Integer> salaries = employees.stream()
                 .map(employee -> employee.salary)
-                .sorted()
+                .sorted(Comparator.reverseOrder())
                 .limit(3)
                 .toList();
+        System.out.println(salaries);    // for bigger datasets lets use PriorityQueue instead of this if we always want top 3 salaries.
 
+//        List<Integer> top3 = employees.stream()
+//                .map(Employee::salary)
+//                .sorted(Comparator.reverseOrder())
+//                .limit(3)
+//                .collect(Collectors.collectingAndThen(Collectors.toList(), List::copyOf));   // for getting immutable list
+    }
+
+    /*Q5
+    Filter Map Entries
+    Given Map<String, Integer>, filter out entries where value < 100.
+    */
+
+    // We use toMap when we already have a Map i.e. unique keys, we use groupingBy when we operate from list or stuff like that when we want to generate unique keys.
+    public static Map<String, Integer> sales = Map.of(
+            "Apples", 50,
+            "Bananas", 120,
+            "Cherries", 200,
+            "Dates", 90,
+            "Oranges", 300,
+            "Mangoes", 75
+    );
+
+    public static void question5(){
+        Map<String, Integer> greaterThanHundredMap =
+                sales.entrySet()
+                        .stream()
+                        .filter(entry -> entry.getValue() >= 75)
+                        .collect(Collectors.toMap(
+                                entry -> entry.getKey(),
+                                entry -> entry.getValue()
+                                )
+                        );
+
+        System.out.println(greaterThanHundredMap + "\n\n");
+
+        List<Integer> greaterThanHundredList =
+                sales.entrySet()
+                        .stream()
+                        .map(entry -> entry.getValue())
+                        .filter(value -> value >=75)
+                        .collect(Collectors.toUnmodifiableList());
+
+        System.out.println(greaterThanHundredList);
     }
 
 }
